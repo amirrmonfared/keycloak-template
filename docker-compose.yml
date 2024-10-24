@@ -2,13 +2,19 @@ version: '3'
 
 services:
   keycloak:
-      image: quay.io/keycloak/keycloak:25.0.1
-      environment:
-        KEYCLOAK_ADMIN: admin
-        KEYCLOAK_ADMIN_PASSWORD: admin
-        KC_HTTP_RELATIVE_PATH: /auth
-      ports:
-        - 8080:8080
-      volumes: 
-        - ./src/main/resources/theme/:/opt/keycloak/themes/
-      entrypoint: /opt/keycloak/bin/kc.sh --verbose start-dev --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
+    image: quay.io/keycloak/keycloak:25.0.1 
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - 8180:8080
+    volumes: 
+      - ./target/keycloak-custom-email-provider-1.0.0.jar:/opt/keycloak/providers/keycloak-custom-email-provider.jar
+      - ./src/main/resources/themes/:/opt/keycloak/themes/
+    entrypoint:
+      - /opt/keycloak/bin/kc.sh
+      - start-dev
+      - --spi-theme-static-max-age=-1
+      - --spi-theme-cache-themes=false
+      - --spi-theme-cache-templates=false
+      - --verbose
